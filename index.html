@@ -6,7 +6,7 @@
     <title>실버플레이</title>
     
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#4A6C56">
+    <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="icon-192.png">
     <link rel="icon" type="image/png" href="icon-192.png">
 
@@ -14,159 +14,356 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 
     <style>
-        :root { --primary: #4A6C56; --bg: #F9F9F9; --white: #FFFFFF; --text: #222; }
-        body { font-family: 'Pretendard', sans-serif; background: var(--bg); margin: 0; color: var(--text); padding-bottom: 80px; -webkit-font-smoothing: antialiased; }
-        .container { max-width: 500px; margin: 0 auto; background: var(--white); min-height: 100vh; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
-        button { cursor: pointer; font-family: inherit; }
+        /* --- 1. 기본 설정 (Simplicity First) --- */
+        :root {
+            --primary: #4A6C56;     /* 편안한 세이지 그린 */
+            --primary-dark: #3A5544;
+            --accent: #D4AF37;      /* 고급스러운 골드 포인트 */
+            --bg: #F5F7F6;          /* 눈이 편안한 미색 배경 */
+            --white: #FFFFFF;
+            --text-main: #111111;   /* 가독성 높은 진한 검정 */
+            --text-sub: #666666;
+            --border: #E5E5E5;
+            --shadow: 0 4px 20px rgba(0,0,0,0.06);
+            --radius: 16px;
+        }
 
-        header { position: sticky; top: 0; z-index: 100; background: var(--white); border-bottom: 1px solid #EEE; }
-        .font-control { background: #F4F6F8; padding: 6px 20px; display: flex; justify-content: flex-end; align-items: center; gap: 8px; font-size: 13px; color: #666; }
-        .btn-font { border: 1px solid #DDD; background: white; width: 26px; height: 26px; border-radius: 50%; font-weight: bold; }
-        .service-banner { background: var(--primary); color: white; padding: 14px 20px; font-size: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-        .header-title { padding: 20px; text-align: center; }
-        .header-title h1 { margin: 0; font-size: 26px; color: var(--primary); }
+        body {
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+            background: var(--bg);
+            margin: 0;
+            color: var(--text-main);
+            padding-bottom: 90px; /* 하단 탭바 공간 확보 */
+            -webkit-font-smoothing: antialiased;
+            word-break: keep-all;
+        }
 
-        .tab-menu { display: flex; border-bottom: 1px solid #EEE; }
-        .tab-item { flex: 1; text-align: center; padding: 15px 0; font-size: 17px; font-weight: bold; color: #AAA; border-bottom: 3px solid transparent; cursor: pointer; }
-        .tab-item.active { color: var(--text); border-bottom: 3px solid var(--primary); }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: var(--bg);
+            min-height: 100vh;
+            position: relative;
+        }
 
-        .filter-box { padding: 15px 20px 5px; overflow-x: auto; white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none; background: white; }
-        .filter-box::-webkit-scrollbar { display: none; }
-        .chip { display: inline-block; padding: 8px 16px; margin-right: 6px; border-radius: 20px; background: #F0F0F0; color: #555; font-size: 15px; font-weight: 600; border: none; }
-        .chip.active { background: var(--primary); color: white; }
-
-        .section-header { padding: 35px 20px 15px; font-size: 21px; font-weight: 800; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid #eee; background: white; }
-        .section-sub { font-size: 14px; color: #666; font-weight: normal; margin-left: auto; }
-
-        .card { background: white; border-bottom: 10px solid #F4F6F8; padding-bottom: 20px; }
-        .card.best { border-bottom: 10px solid #FFFAF0; background: #FFFEFA; }
-        .card-header { padding: 20px 20px 10px; }
-        .card-tag { color: var(--primary); font-weight: 700; font-size: 14px; margin-bottom: 5px; display: block; }
-        .card-title { font-size: 22px; font-weight: 700; line-height: 1.35; margin: 0; }
-
-        .info-bar { display: flex; background: #FAFAFA; border: 1px solid #EEE; border-radius: 12px; margin: 0 20px 15px; padding: 12px 0; }
-        .info-item { flex: 1; text-align: center; border-right: 1px solid #EEE; }
-        .info-item:last-child { border-right: none; }
-        .info-lbl { font-size: 12px; color: #888; display: block; margin-bottom: 3px; }
-        .info-val { font-size: 14px; font-weight: 700; }
-
-        .video-box { position: relative; width: 100%; padding-bottom: 56.25%; background: black; }
-        .video-box iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
-        .disclaimer { background: #F8F9FA; padding: 12px 20px; font-size: 13px; color: #767676; border-top: 1px solid #EEE; display: flex; gap: 8px; align-items: center; }
+        button { cursor: pointer; border: none; font-family: inherit; background: none; }
         
-        .actions { padding: 15px 20px 0; display: flex; gap: 8px; }
-        .btn-act { flex: 1; padding: 12px; border-radius: 10px; font-size: 15px; font-weight: 600; border: 1px solid #DDD; background: white; display: flex; align-items: center; justify-content: center; gap: 5px; color:#333; }
-        .btn-act:active { background: #eee; transform: scale(0.98); }
-
-        .comment-area { display: none; background: #F8F9FA; margin: 15px 20px 0; padding: 15px; border-radius: 12px; }
-        .input-group { display: flex; gap: 8px; }
-        .input-box { padding: 10px; border: 1px solid #DDD; border-radius: 8px; flex: 1; }
-        .btn-send { background: var(--primary); color: white; border: none; padding: 0 15px; border-radius: 8px; font-weight: bold; }
+        /* --- 2. 헤더 (Clean UI) --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
         
-        .rec-form { background: #F0F4F2; padding: 20px; border-radius: 15px; margin-bottom: 20px; }
-        .rec-list-item { padding:15px; border-bottom:1px solid #eee; }
+        .brand { display: flex; align-items: center; gap: 8px; }
+        .brand h1 { margin: 0; font-size: 22px; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
+        .brand i { color: var(--primary); font-size: 20px; }
 
-        footer { background: #F5F5F5; padding: 40px 20px; margin-top: 40px; color: #888; font-size: 13px; line-height: 1.6; border-top: 1px solid #ddd;}
-        .footer-link span { margin-right: 15px; font-weight: bold; cursor: pointer; text-decoration: underline; }
+        .header-controls { display: flex; gap: 10px; }
+        .btn-control {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: #F0F2F1; color: var(--text-sub);
+            font-size: 14px; font-weight: bold;
+            display: flex; align-items: center; justify-content: center;
+            transition: 0.2s;
+        }
+        .btn-control:active { transform: scale(0.9); background: #E0E2E1; }
 
-        /* 모달 & 토스트 */
-        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; }
-        .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 20px; padding: 25px; max-height: 80vh; overflow-y: auto; }
-        .modal-title { font-size: 20px; font-weight: bold; color: var(--primary); margin-bottom: 15px; text-align: center; }
-        .btn-cls { width: 100%; padding: 14px; background: var(--primary); color: white; border: none; border-radius: 12px; font-size: 16px; font-weight: bold; margin-top: 20px; }
+        /* --- 3. 메인 콘텐츠 --- */
         
-        .toast-container { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); z-index: 9999; display: flex; flex-direction: column; gap: 10px; width: 90%; align-items: center; pointer-events: none; }
-        .toast { background: rgba(30, 30, 30, 0.95); color: white; padding: 14px 24px; border-radius: 50px; font-size: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateY(20px); transition: all 0.3s ease; }
-        .toast.show { opacity: 1; transform: translateY(0); }
+        /* 필터 칩 */
+        .filter-scroll {
+            padding: 15px 20px;
+            overflow-x: auto;
+            white-space: nowrap;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            background: var(--bg);
+        }
+        .filter-scroll::-webkit-scrollbar { display: none; }
+        .chip {
+            display: inline-block;
+            padding: 10px 18px;
+            margin-right: 8px;
+            border-radius: 25px;
+            background: var(--white);
+            color: var(--text-sub);
+            font-size: 15px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .chip.active {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
+            box-shadow: 0 4px 10px rgba(74, 108, 86, 0.3);
+        }
 
-        /* 설치 팝업 */
-        #pwa-install { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #222; color: white; padding: 12px 24px; border-radius: 50px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 5000; cursor: pointer; align-items: center; gap: 10px; }
-        .install-popup-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 6000; align-items: center; justify-content: center; }
-        .install-box { background: white; width: 85%; max-width: 350px; border-radius: 20px; padding: 30px 20px; text-align: center; }
+        /* 섹션 타이틀 */
+        .section-header {
+            padding: 25px 20px 15px;
+            display: flex;
+            align-items: flex-end;
+            gap: 8px;
+        }
+        .section-title { font-size: 20px; font-weight: 800; margin: 0; line-height: 1; }
+        .section-sub { font-size: 14px; color: var(--text-sub); font-weight: 500; }
+
+        /* 카드 디자인 (Modern & Soft) */
+        .card-list { padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .card.best { border: 2px solid var(--accent); position: relative; }
+        .card.best::after {
+            content: 'BEST'; position: absolute; top: 0; right: 0;
+            background: var(--accent); color: white;
+            font-size: 11px; font-weight: bold; padding: 4px 10px;
+            border-bottom-left-radius: 10px;
+        }
+
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 비율 */
+            background: black;
+        }
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+        .card-body { padding: 20px; }
+        .card-meta { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+        .badge { font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; background: #F0F2F1; color: var(--text-sub); }
+        .badge.cat { background: rgba(74, 108, 86, 0.1); color: var(--primary); }
+        
+        .card-title { font-size: 19px; font-weight: 700; margin: 0 0 15px 0; line-height: 1.4; }
+
+        .card-actions {
+            display: flex; gap: 10px; border-top: 1px solid #F5F5F5; padding-top: 15px;
+        }
+        .btn-action {
+            flex: 1;
+            padding: 12px 0;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            display: flex; align-items: center; justify-content: center; gap: 6px;
+            color: var(--text-sub);
+            background: #F8F9FA;
+            transition: 0.2s;
+        }
+        .btn-action.primary { color: var(--primary); background: rgba(74, 108, 86, 0.08); }
+        .btn-action:active { transform: scale(0.96); }
+
+        /* --- 4. 추천 게시판 폼 --- */
+        .rec-container { padding: 20px; }
+        .form-box {
+            background: var(--white);
+            padding: 25px 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 25px;
+        }
+        .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .form-label { font-size: 18px; font-weight: 700; }
+        
+        .input-field {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 10px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-size: 16px;
+            background: #FAFAFA;
+            box-sizing: border-box;
+            outline: none;
+        }
+        .input-field:focus { border-color: var(--primary); background: white; }
+        
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            border-radius: 12px;
+            margin-top: 5px;
+        }
+
+        .rec-item {
+            background: var(--white);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            border: 1px solid var(--border);
+        }
+
+        /* --- 5. 하단 내비게이션 (핵심 UX 변경) --- */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            background: var(--white);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0 25px; /* 아이폰 하단 바 고려 */
+            z-index: 1000;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
+            max-width: 500px; /* 컨테이너 너비 제한 시 필요, 중앙정렬 */
+            left: 50%; transform: translateX(-50%);
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: #999;
+            text-decoration: none;
+            width: 80px;
+            cursor: pointer;
+        }
+        .nav-item i { font-size: 22px; transition: 0.2s; }
+        .nav-item span { font-size: 11px; font-weight: 600; }
+        
+        .nav-item.active { color: var(--primary); }
+        .nav-item.active i { transform: translateY(-2px); }
+
+        /* --- 6. 모달 & 토스트 --- */
+        .modal-bg {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6); z-index: 2000;
+            align-items: center; justify-content: center;
+            backdrop-filter: blur(3px);
+        }
+        .modal-box {
+            background: white; width: 85%; max-width: 380px;
+            border-radius: 24px; padding: 25px;
+            max-height: 80vh; overflow-y: auto;
+            display: flex; flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-header { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 20px; text-align: center; }
+        
+        .toast {
+            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
+            background: rgba(30, 30, 30, 0.9); color: white;
+            padding: 14px 24px; border-radius: 50px;
+            font-size: 15px; font-weight: 600;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            opacity: 0; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+            z-index: 9999; pointer-events: none; width: max-content;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+        /* PWA 설치 팝업 스타일 */
+        .install-popup {
+            position: fixed; bottom: 90px; left: 20px; right: 20px;
+            background: #222; color: white;
+            padding: 20px; border-radius: 16px;
+            display: none; align-items: center; justify-content: space-between;
+            z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 460px; margin: 0 auto;
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="font-control">
-            <span>글자 크기</span>
-            <button class="btn-font" onclick="resizeFont(1)">+</button>
-            <button class="btn-font" onclick="resizeFont(-1)">-</button>
-        </div>
-        <div class="service-banner" onclick="openModal('intro')">
-            <span>📢 서비스 이용방법 & 자주 묻는 질문</span>
-            <i class="fas fa-chevron-right"></i>
-        </div>
-        <div class="header-title">
+        <div class="brand">
+            <i class="fas fa-seedling"></i>
             <h1>실버플레이</h1>
-            <p>매일 만나는 건강한 즐거움</p>
         </div>
-        <div class="tab-menu">
-            <div class="tab-item active" onclick="switchTab('home')">오늘의 영상</div>
-            <div class="tab-item" onclick="switchTab('rec')">추천 게시판</div>
+        <div class="header-controls">
+            <button class="btn-control" onclick="resizeFont(-1)" aria-label="글자 작게"><i class="fas fa-minus"></i></button>
+            <button class="btn-control" onclick="resizeFont(1)" aria-label="글자 크게"><i class="fas fa-plus"></i></button>
+            <button class="btn-control" onclick="openModal('intro')" aria-label="도움말"><i class="fas fa-question"></i></button>
         </div>
     </header>
 
     <div id="view-home">
-        <div class="filter-box" id="filters">
-            <button class="chip active" onclick="filter('all')">전체</button>
+        <div class="filter-scroll" id="filters">
+            <button class="chip active">전체</button>
         </div>
-        <div id="video-list"></div>
+        <div id="video-list" class="card-list" style="padding-top: 10px;"></div>
+        
+        <div style="padding: 40px 20px; text-align: center; color: #999; font-size: 13px;">
+            <p style="margin-bottom: 10px;">
+                <span onclick="openModal('terms')" style="cursor:pointer; text-decoration:underline; margin-right:10px;">이용약관</span>
+                <span onclick="openModal('privacy')" style="cursor:pointer; text-decoration:underline;">개인정보처리방침</span>
+            </p>
+            Copyright © SilverPlay. All rights reserved.
+        </div>
     </div>
 
-    <div id="view-rec" style="display:none; padding:20px;">
-        <div class="rec-form">
-            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                <h3 style="margin:0;">📢 영상 추천하기</h3>
-                <i class="far fa-question-circle" style="font-size:20px; color:#aaa;" onclick="openModal('help_rec')"></i>
+    <div id="view-rec" style="display:none;">
+        <div class="section-header">
+            <h2 class="section-title">추천 게시판</h2>
+            <span class="section-sub">이웃들과 함께해요</span>
+        </div>
+        <div class="rec-container">
+            <div class="form-box">
+                <div class="form-header">
+                    <span class="form-label">📢 영상 추천하기</span>
+                </div>
+                <input type="text" id="recWriter" class="input-field" placeholder="작성자 이름">
+                <input type="text" id="recChannel" class="input-field" placeholder="추천 채널 또는 제목">
+                <input type="text" id="recReason" class="input-field" placeholder="추천 이유 (간단히)" style="margin-bottom:5px;">
+                <button class="btn-submit" onclick="submitRec()">등록하기</button>
             </div>
-            <input type="text" id="recWriter" placeholder="작성자 이름" style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ddd; border-radius:8px;">
-            <input type="text" id="recChannel" placeholder="추천 채널/제목" style="width:100%; padding:10px; margin-bottom:8px; border:1px solid #ddd; border-radius:8px;">
-            <textarea id="recReason" placeholder="추천 이유" style="width:100%; height:60px; padding:10px; margin-bottom:8px; border:1px solid #ddd; border-radius:8px;"></textarea>
-            <button class="btn-cls" style="margin-top:0;" onclick="submitRec()">등록하기</button>
+            <h3 style="margin: 30px 0 15px; font-size:18px;">우리들의 추천 목록</h3>
+            <div id="rec-list"></div>
         </div>
-        <h3 style="border-bottom:2px solid #333; padding-bottom:10px;">우리들의 추천 목록</h3>
-        <div id="rec-list"></div>
     </div>
 
-    <footer>
-        <div class="footer-link" style="margin-bottom:20px;">
-            <span onclick="openModal('terms')">이용약관</span>
-            <span onclick="openModal('privacy')">개인정보처리방침</span>
+    <nav class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
+            <i class="fas fa-home"></i>
+            <span>오늘의 영상</span>
         </div>
-        <div>
-            <strong>상호명:</strong> (주)실버플레이 | <strong>대표자:</strong> 홍길동<br>
-            <strong>연락처:</strong> 02-1234-5678 | <strong>사업자:</strong> 123-45-67890<br>
-            <strong>주소:</strong> 서울시 강남구 테헤란로 123<br>
-            <br>Copyright © SilverPlay. All rights reserved.
+        <div class="nav-item" onclick="switchTab('rec')" id="nav-rec">
+            <i class="fas fa-comment-medical"></i>
+            <span>추천 게시판</span>
         </div>
-    </footer>
+    </nav>
 </div>
 
-<div class="install-popup-bg" id="install-popup">
-    <div class="install-box">
-        <h2 style="margin:0 0 10px 0; font-size:20px;">앱을 설치해주세요!</h2>
-        <p style="color:#666; font-size:15px;">홈 화면에 설치하면<br>매일 편하게 영상을 보실 수 있습니다.</p>
-        <button class="btn-cls" style="background:#222;" onclick="triggerInstall()">지금 설치하기</button>
-        <button style="background:none; border:none; color:#999; margin-top:15px; text-decoration:underline;" onclick="document.getElementById('install-popup').style.display='none'">나중에 할게요</button>
+<div class="install-popup" id="install-popup">
+    <div>
+        <div style="font-weight:bold; font-size:15px; margin-bottom:4px;">앱으로 더 편하게 보세요!</div>
+        <div style="font-size:13px; color:#ccc;">홈 화면에 추가하기</div>
+    </div>
+    <div style="display:flex; gap:10px;">
+        <button style="color:#aaa; font-weight:bold; font-size:14px;" onclick="document.getElementById('install-popup').style.display='none'">닫기</button>
+        <button style="background:var(--primary); color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:14px;" onclick="triggerInstall()">설치</button>
     </div>
 </div>
-<div id="pwa-install" onclick="installPWA()"><i class="fas fa-download"></i> 앱으로 설치하기</div>
 
 <div class="modal-bg" id="modal">
     <div class="modal-box">
-        <div class="modal-title" id="m-title"></div>
-        <div id="m-body" style="font-size:15px; line-height:1.6; color:#555;"></div>
-        <button class="btn-cls" onclick="document.getElementById('modal').style.display='none'">닫기</button>
+        <div class="modal-header" id="m-title"></div>
+        <div id="m-body" style="font-size:16px; line-height:1.6; color:#444;"></div>
+        <button class="btn-submit" style="margin-top:20px; background:#444;" onclick="document.getElementById('modal').style.display='none'">닫기</button>
     </div>
 </div>
-<div id="toast-container" class="toast-container"></div>
+
+<div id="toast-container"></div>
 
 <script>
-    // ▼▼▼ [GAS URL 입력 필수] ▼▼▼
-    const API_URL = 'https://script.google.com/macros/s/AKfycbyEcxr0N-0YgSHGn7bc78StVcdj-oIE7J3uXhCRe-BEhq8YD8zybBuW9y5gIMcPw1lRGQ/exec';
+    // ▼▼▼ [GAS 배포 URL 입력 필수] ▼▼▼
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxuLVNH5StrgFxJ-g-JFQ32u9y67J9z11i_ZbVf0JgWGHtE3YAD3M2wDh9eNMyrgcL4bg/exec'; 
     // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     let gVideos = [];
@@ -176,7 +373,7 @@
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault(); pwaPrompt = e;
-        setTimeout(() => document.getElementById('install-popup').style.display = 'flex', 2000);
+        setTimeout(() => document.getElementById('install-popup').style.display = 'flex', 3000);
     });
 
     function triggerInstall() {
@@ -189,32 +386,23 @@
         }
     }
 
-    // [핵심 해결] 유튜브 주소 자동 정제 함수 (쇼츠, 모바일, 공백 완벽 대응)
+    // 유튜브 ID 정제
     function extractVideoId(url) {
         if(!url) return '';
-        url = url.trim(); // 공백 제거
-        
-        // 1. 이미 ID만 있는 경우 (11자리)
+        url = url.trim();
         if(/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
-
-        // 2. Shorts URL 처리
-        if(url.includes('shorts/')) {
-            const parts = url.split('shorts/');
-            return parts[1].split('?')[0]; // ID 뒤에 ?si=... 같은거 제거
-        }
-
-        // 3. 일반 URL 처리 (정규식)
-        const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-        const match = url.match(regExp);
+        if(url.includes('shorts/')) return url.split('shorts/')[1].split('?')[0];
+        const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/);
         return (match && match[2].length === 11) ? match[2] : null;
     }
 
     async function loadData() {
-        if(!API_URL || API_URL.includes('URL')) {
+        // Mock Data for testing
+        if(!API_URL || API_URL.includes('URL') || API_URL.includes('여기에')) {
             gVideos = [
-                {id:1, title:"임영웅 노래모음", videoId:"dQw4w9WgXcQ", category:"트로트", duration:"60분", channelName:"임영웅TV", likes:1000},
-                {id:2, title:"무릎 통증 운동", videoId:"xyz", category:"건강", duration:"10분", channelName:"건강박사", likes:500},
-                {id:3, title:"스마트폰 교육", videoId:"abc", category:"디지털", duration:"5분", channelName:"친절한금자씨", likes:10}
+                {id:1, title:"임영웅 노래모음 - 사랑은 늘 도망가 외 30곡", videoId:"dQw4w9WgXcQ", category:"트로트", duration:"60분", channelName:"임영웅TV", likes:1240, comments:["정말 좋습니다!", "부모님이 좋아하세요."]},
+                {id:2, title:"하루 10분! 무릎 통증 싹 사라지는 기적의 운동", videoId:"xyz", category:"건강", duration:"10분", channelName:"건강박사", likes:512, comments:[]},
+                {id:3, title:"스마트폰 글자 크기 조절하는 법 (어르신 필수)", videoId:"abc", category:"디지털", duration:"5분", channelName:"친절한금자씨", likes:89, comments:[]}
             ];
             renderFilter(); renderHome(); return;
         }
@@ -223,7 +411,7 @@
                 fetch(`${API_URL}?action=getVideos`).then(res=>res.json()),
                 fetch(`${API_URL}?action=getRecommendations`).then(res=>res.json())
             ]);
-            gVideos = v;
+            gVideos = v.map(item => ({...item, comments: item.comments || []}));
             renderFilter(); renderHome(); renderRecs(r);
         } catch(e) { console.error(e); showToast('데이터 로드 실패'); }
     }
@@ -242,7 +430,7 @@
         if(cat === 'all') renderHome();
         else {
             const list = gVideos.filter(v=>v.category === cat);
-            div.innerHTML += `<div class="section-header">${cat} 모음 <span class="section-sub">${list.length}개</span></div>`;
+            div.innerHTML += `<div class="section-header"><h2 class="section-title">${cat} 모음</h2><span class="section-sub">${list.length}개</span></div>`;
             list.forEach(v => div.appendChild(mkCard(v, false)));
         }
     }
@@ -253,102 +441,147 @@
         const daily = gVideos.slice(0, 5); 
         const popular = [...gVideos].sort((a,b) => b.likes - a.likes).slice(0, 5);
 
-        div.innerHTML += `<div class="section-header">📅 오늘의 엄선작 <span class="section-sub">최신 5개</span></div>`;
+        div.innerHTML += `<div class="section-header"><h2 class="section-title">📅 오늘의 엄선작</h2></div>`;
         daily.forEach(v => div.appendChild(mkCard(v, false)));
 
-        div.innerHTML += `<div class="section-header" style="border-top:10px solid #f4f6f8; margin-top:10px;"><span style="color:#D4AF37">👑</span> 명예의 전당 <span class="section-sub">인기 영상</span></div>`;
+        div.innerHTML += `<div class="section-header" style="margin-top:20px;"><h2 class="section-title"><span style="color:#D4AF37">👑</span> 명예의 전당</h2></div>`;
         popular.forEach(v => div.appendChild(mkCard(v, true)));
     }
 
     function mkCard(v, isBest) {
-        // [중요] ID 자동 정제 적용
         const cleanId = extractVideoId(v.videoId);
-        
-        // ID가 유효하지 않으면 안내 표시
-        if(!cleanId) {
-            return `<div class="card" style="padding:20px; text-align:center; color:red;">영상 정보를 불러올 수 없습니다. (${v.title})</div>`;
-        }
+        if(!cleanId) return document.createElement('div'); // Error skip
 
         const el = document.createElement('div');
         el.className = `card ${isBest?'best':''}`;
         el.innerHTML = `
-            <div class="card-header">
-                <span class="card-tag">${v.category}</span>
-                <h2 class="card-title">${isBest?'<span style="color:#D4AF37">👑</span> ':''}${v.title}</h2>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/${cleanId}?rel=0" frameborder="0" allowfullscreen loading="lazy"></iframe>
             </div>
-            <div class="info-bar">
-                <div class="info-item"><span class="info-lbl">시간</span><span class="info-val">${v.duration}</span></div>
-                <div class="info-item"><span class="info-lbl">채널</span><span class="info-val">${v.channelName}</span></div>
-                <div class="info-item"><span class="info-lbl">추천</span><span class="info-val" id="like-${v.id}">${v.likes}</span></div>
-            </div>
-            <div class="video-box">
-                <iframe src="https://www.youtube.com/embed/${cleanId}?rel=0" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="disclaimer">
-                <i class="fas fa-info-circle"></i>
-                <span>유튜브 공식 플레이어로 재생되며, 수익은 원작자에게 돌아갑니다.</span>
-            </div>
-            <div class="actions">
-                <button class="btn-act" onclick="handleLike('${v.id}')"><i class="far fa-heart" style="color:red"></i> 좋아요</button>
-                <button class="btn-act" onclick="toggleCmt('${v.id}')"><i class="far fa-comment-dots" style="color:var(--primary)"></i> 리뷰</button>
-                <button class="btn-act" style="color:#222; border-color:#222;" onclick="shareNative('${v.title}')"><i class="fas fa-share-alt"></i> 공유</button>
-            </div>
-            <div id="cmt-${v.id}" class="comment-area">
-                <div class="input-group">
-                    <input type="text" id="txt-${v.id}" class="input-box" placeholder="내용 입력">
-                    <button class="btn-send" onclick="submitCmt('${v.id}')">등록</button>
+            <div class="card-body">
+                <div class="card-meta">
+                    <span class="badge cat">${v.category}</span>
+                    <span class="badge">${v.duration}</span>
+                    <span class="badge">${v.channelName}</span>
+                </div>
+                <h3 class="card-title">${v.title}</h3>
+                <div class="card-actions">
+                    <button class="btn-action" onclick="handleLike('${v.id}')">
+                        <i class="far fa-heart" style="color:#FF6B6B"></i> <span id="like-${v.id}">${v.likes}</span>
+                    </button>
+                    <button class="btn-action primary" onclick="openReviewModal('${v.id}')">
+                        <i class="far fa-comment-dots"></i> 리뷰(${v.comments ? v.comments.length : 0})
+                    </button>
+                    <button class="btn-action" onclick="shareNative('${v.title}')">
+                        <i class="fas fa-share-alt"></i> 공유
+                    </button>
                 </div>
             </div>
         `;
         return el;
     }
 
+    // --- 리뷰 모달 (New Design) ---
+    function openReviewModal(id) {
+        const video = gVideos.find(v => String(v.id) === String(id));
+        if(!video) return;
+
+        let commentsHtml = '';
+        if (video.comments && video.comments.length > 0) {
+            commentsHtml = `<ul style="list-style:none; padding:0; margin:0 0 15px 0; max-height:250px; overflow-y:auto; background:#F8F9FA; border-radius:12px;">`;
+            video.comments.forEach(c => {
+                commentsHtml += `<li style="padding:12px 15px; border-bottom:1px solid #eee; font-size:15px; color:#333;">${c}</li>`;
+            });
+            commentsHtml += `</ul>`;
+        } else {
+            commentsHtml = `<div style="padding:40px 0; text-align:center; color:#999; font-size:15px; background:#F8F9FA; border-radius:12px; margin-bottom:15px;">작성된 리뷰가 없습니다.<br>첫 번째 이야기를 남겨보세요!</div>`;
+        }
+
+        const inputHtml = `
+            <div style="border-top:1px solid #eee; padding-top:20px;">
+                <input type="text" id="modal-cmt-input" class="input-field" placeholder="따뜻한 리뷰를 남겨주세요">
+                <button class="btn-submit" onclick="submitCmt('${id}')">등록하기</button>
+            </div>
+        `;
+
+        document.getElementById('m-title').innerText = `'${video.title}' 리뷰`;
+        document.getElementById('m-body').innerHTML = commentsHtml + inputHtml;
+        document.getElementById('modal').style.display = 'flex';
+    }
+
+    function submitCmt(id) {
+        const inputEl = document.getElementById('modal-cmt-input');
+        const txt = inputEl.value.trim();
+        if(!txt) return showToast('내용을 입력해주세요.');
+
+        const video = gVideos.find(v => String(v.id) === String(id));
+        if(video) {
+            if(!video.comments) video.comments = [];
+            video.comments.push(txt);
+        }
+
+        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) {
+            fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addComment', videoId:id, nickname:'익명', content:txt}) });
+        }
+
+        showToast('📝 리뷰가 등록되었습니다.');
+        openReviewModal(id); 
+        // 칩 상태 확인 후 리스트 갱신
+        const activeChip = document.querySelector('.chip.active');
+        const cat = activeChip ? activeChip.innerText.trim() : '전체';
+        filter(cat === '전체' ? 'all' : cat);
+    }
+
+    // --- 추천 게시판 ---
     function renderRecs(list) {
         document.getElementById('rec-list').innerHTML = list.map(r => 
-            `<div class="rec-list-item">
-                <div style="font-weight:bold;">📺 ${r.channel}</div>
-                <div style="color:#555; margin:5px 0;">${r.reason}</div>
-                <div style="font-size:12px; color:#999;">${r.writer}님 추천</div>
+            `<div class="rec-item">
+                <div style="font-weight:700; font-size:16px; margin-bottom:5px;">📺 ${r.channel}</div>
+                <div style="color:#555; font-size:15px; margin-bottom:8px; line-height:1.5;">${r.reason}</div>
+                <div style="font-size:13px; color:#999; text-align:right;">- ${r.writer}님 추천</div>
             </div>`
         ).join('');
     }
 
+    function submitRec() {
+        const w=document.getElementById('recWriter').value, c=document.getElementById('recChannel').value, r=document.getElementById('recReason').value;
+        if(!w || !c) return showToast('이름과 채널명은 필수입니다.');
+        showToast('📢 추천해주셔서 감사합니다!');
+        document.getElementById('recWriter').value='';
+        document.getElementById('recChannel').value='';
+        document.getElementById('recReason').value='';
+        
+        // 로컬 리스트에 가짜 추가 (즉각 반응용)
+        const newItem = {writer:w, channel:c, reason:r};
+        const listDiv = document.getElementById('rec-list');
+        listDiv.insertAdjacentHTML('afterbegin', 
+            `<div class="rec-item"><div style="font-weight:700; font-size:16px; margin-bottom:5px;">📺 ${c}</div><div style="color:#555; font-size:15px; margin-bottom:8px;">${r}</div><div style="font-size:13px; color:#999; text-align:right;">- ${w}님 추천</div></div>`
+        );
+
+        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addRecommendation', writer:w, channel:c, reason:r}) });
+    }
+
+    // --- 공통 기능 ---
     function handleLike(id) {
         const el = document.getElementById(`like-${id}`);
         el.innerText = parseInt(el.innerText) + 1;
-        showToast('❤️ 좋아요를 반영했습니다!');
-        if(API_URL && !API_URL.includes('URL')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addLike', id:id}) });
+        showToast('❤️ 좋아요!');
+        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addLike', id:id}) });
     }
 
     function shareNative(title) {
         if(navigator.share) navigator.share({title:'실버플레이', text:title, url:location.href});
-        else { navigator.clipboard.writeText(location.href); showToast("📋 링크가 복사되었습니다!"); }
+        else { navigator.clipboard.writeText(location.href); showToast("📋 주소가 복사되었습니다."); }
     }
 
-    function submitCmt(id) {
-        const t = document.getElementById(`txt-${id}`).value;
-        if(!t) return showToast('내용을 입력해주세요.');
-        showToast('📝 리뷰가 등록되었습니다.');
-        document.getElementById(`cmt-${id}`).style.display='none';
-        if(API_URL && !API_URL.includes('URL')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addComment', videoId:id, nickname:'익명', content:t}) });
-    }
-
-    function submitRec() {
-        const w=document.getElementById('recWriter').value, c=document.getElementById('recChannel').value;
-        if(!w || !c) return showToast('이름과 채널명을 입력해주세요.');
-        showToast('📢 추천글이 등록되었습니다!');
-        document.getElementById('recWriter').value='';
-        document.getElementById('recChannel').value='';
-        document.getElementById('recReason').value='';
-        if(API_URL && !API_URL.includes('URL')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addRecommendation', writer:w, channel:c, reason:''}) });
-    }
-
-    function toggleCmt(id) { const e = document.getElementById(`cmt-${id}`); e.style.display = e.style.display==='block'?'none':'block'; }
     function switchTab(t) {
         document.getElementById('view-home').style.display = t==='home'?'block':'none';
         document.getElementById('view-rec').style.display = t==='rec'?'block':'none';
         window.scrollTo(0,0);
-        document.querySelectorAll('.tab-item').forEach(e => e.classList.toggle('active', e.onclick.toString().includes(t)));
+        
+        // 하단 탭 활성화 스타일
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`nav-${t}`).classList.add('active');
     }
     
     function showToast(msg) {
@@ -361,10 +594,9 @@
     function openModal(t) {
         const m = document.getElementById('modal'), tit = document.getElementById('m-title'), bod = document.getElementById('m-body');
         m.style.display = 'flex';
-        if(t==='intro') { tit.innerText='서비스 안내'; bod.innerHTML='어르신들을 위한 영상 큐레이션 서비스입니다.<br>매일 5개의 새로운 영상이 업데이트됩니다.'; }
-        if(t==='terms') { tit.innerText='이용약관'; bod.innerHTML='본 서비스는 유튜브 링크를 제공하며, 수익은 원작자에게 귀속됩니다.'; }
-        if(t==='privacy') { tit.innerText='개인정보처리방침'; bod.innerHTML='별도의 회원가입 없이 이용 가능하며, 개인정보를 수집하지 않습니다.'; }
-        if(t==='help_rec') { tit.innerText='추천 게시판'; bod.innerHTML='자유롭게 추천해주세요.'; }
+        if(t==='intro') { tit.innerText='서비스 안내'; bod.innerHTML='실버플레이는 시니어분들을 위한<br>맞춤형 영상 큐레이션 서비스입니다.<br><br>매일 엄선된 5개의 영상이 업데이트됩니다.'; }
+        if(t==='terms') { tit.innerText='이용약관'; bod.innerHTML='본 서비스는 유튜브의 영상 링크만을 제공하며,<br>모든 영상의 저작권과 수익은<br>원작자(유튜버)에게 귀속됩니다.'; }
+        if(t==='privacy') { tit.innerText='개인정보처리방침'; bod.innerHTML='이 서비스는 회원가입이 없으며,<br>어떠한 개인정보도 서버에 저장하지 않습니다.<br>안심하고 이용하세요.'; }
     }
 
     let zoom = 100;
@@ -372,6 +604,7 @@
         zoom += d*10;
         if(zoom < 90) zoom = 90; if(zoom > 140) zoom = 140;
         document.body.style.fontSize = zoom + '%';
+        showToast(`글자 크기: ${zoom}%`);
     }
 </script>
 </body>
