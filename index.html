@@ -168,7 +168,7 @@
     </div>
     <div style="display:flex; gap:10px; flex-shrink:0; margin-left:10px;">
         <button style="color:#aaa; font-weight:bold; font-size:14px;" onclick="dismissInstall()">나중에</button>
-        <button style="background:var(--primary); color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:14px;" onclick="triggerInstall()">설치</button>
+        <button style="background:var(--primary); color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:14px;" onclick="triggerInstall()"><span id="install-btn-text">설치</span></button>
     </div>
 </div>
 
@@ -236,17 +236,26 @@
             // iOS Safari: 수동 안내 팝업 표시
             setTimeout(() => {
                 document.getElementById('ios-popup').style.display = 'block';
-            }, 3000);
+            }, 2000);
+        } else if (!isIOS) {
+            // Android/Chrome: beforeinstallprompt를 기다리되,
+            // 3초 안에 안 오면 버튼 자체를 항상 노출 (직접 설치 유도)
+            setTimeout(() => {
+                if (!pwaPrompt) {
+                    // Chrome이 조건 미충족이어도 팝업은 보여줌
+                    // 설치 버튼 클릭 시 크롬 주소창 설치 아이콘 안내로 대체
+                    document.getElementById('install-popup').style.display = 'flex';
+                    document.getElementById('install-btn-text').innerText = '설치 방법 보기';
+                } else {
+                    document.getElementById('install-popup').style.display = 'flex';
+                }
+            }, 2000);
         }
-        // Android/Chrome: beforeinstallprompt 이벤트 대기
     }
 
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         pwaPrompt = e;
-        const dismissed = localStorage.getItem('pwa_dismissed');
-        if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return;
-        setTimeout(() => document.getElementById('install-popup').style.display = 'flex', 3000);
     });
 
     // 설치 완료되면 팝업 숨김
@@ -257,12 +266,30 @@
     });
 
     function triggerInstall() {
-        if(pwaPrompt) {
+        if (pwaPrompt) {
             pwaPrompt.prompt();
             pwaPrompt.userChoice.then((c) => {
                 if(c.outcome==='accepted') document.getElementById('install-popup').style.display='none';
-                pwaPrompt=null;
+                pwaPrompt = null;
             });
+        } else {
+            // beforeinstallprompt 없는 경우 → 크롬 주소창 안내 모달 표시
+            document.getElementById('install-popup').style.display = 'none';
+            document.getElementById('m-title').innerText = '📲 앱 설치 방법';
+            document.getElementById('m-body').innerHTML = `
+                <div style="line-height:2; font-size:16px;">
+                    크롬 브라우저 주소창 오른쪽<br>
+                    <strong>⋮ 메뉴</strong> 를 누른 후<br><br>
+                    <span style="background:#f0f0f0; padding:6px 14px; border-radius:8px; font-weight:700;">
+                        앱 설치
+                    </span>
+                    또는
+                    <span style="background:#f0f0f0; padding:6px 14px; border-radius:8px; font-weight:700;">
+                        홈 화면에 추가
+                    </span>
+                    를 선택하세요.
+                </div>`;
+            document.getElementById('modal').style.display = 'flex';
         }
     }
 
