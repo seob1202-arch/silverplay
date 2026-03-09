@@ -59,7 +59,7 @@
         .btn-action { flex: 1; padding: 12px 0; border-radius: 10px; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--text-sub); background: #F8F9FA; }
         .btn-action.primary { color: var(--primary); background: rgba(74, 108, 86, 0.08); }
 
-        /* 기타 UI (게시판/네비게이션/팝업) 생략 없이 적용 */
+        /* 기타 UI */
         .rec-container { padding: 20px; }
         .form-box { background: var(--white); padding: 25px 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; }
         .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
@@ -82,7 +82,7 @@
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .install-popup { position: fixed; bottom: 90px; left: 20px; right: 20px; background: #222; color: white; padding: 20px; border-radius: 16px; display: none; align-items: center; justify-content: space-between; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 460px; margin: 0 auto; }
 
-        /* [추가됨] 로딩 인디케이터 스피너 */
+        /* 로딩 인디케이터 스피너 (안보이게 숨김 처리 기반) */
         .loader-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg); z-index: 99;
@@ -179,12 +179,19 @@
 <div id="toast-container"></div>
 
 <script>
-    // ▼▼▼ 반드시 새로 배포한 GAS URL을 넣어주세요 ▼▼▼
+    // ▼ API_URL (설정하신 URL 유지) ▼
     const API_URL = 'https://script.google.com/macros/s/AKfycbw1ZzdOp0EGLkswZJKUFrUKZGKOkCi6l_XcLzMkLla2cXB9qx-RoxkyOaj4UHQ7xOpi7w/exec'; 
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     let gVideos = [];
     let pwaPrompt;
+
+    // [핵심 업데이트] 최초 방문 시 빈 화면 대기를 막기 위한 기본 내장 데이터
+    // 앱을 켜자마자 이 영상들이 0초 만에 뜨고, 뒤에서 몰래 최신 데이터를 불러옵니다.
+    const defaultVideos = [
+        {id:"default1", title:"임영웅 노래모음 베스트 - 마음이 편안해지는 곡", videoId:"dQw4w9WgXcQ", category:"트로트", duration:"60분", channelName:"임영웅TV", likes:1240, comments:[]},
+        {id:"default2", title:"하루 10분! 무릎 통증 싹 사라지는 기적의 운동", videoId:"xyz", category:"건강", duration:"10분", channelName:"건강박사", likes:512, comments:[]},
+        {id:"default3", title:"스마트폰 글자 크기 조절하는 법 (어르신 필수)", videoId:"abc", category:"디지털", duration:"5분", channelName:"친절한금자씨", likes:89, comments:[]}
+    ];
 
     document.addEventListener('DOMContentLoaded', loadData);
     if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
@@ -212,41 +219,45 @@
         return (match && match[2].length === 11) ? match[2] : null;
     }
 
-    // [핵심 변경] 로컬 스토리지 캐싱 + 단일 API 호출 (Stale-while-revalidate 패턴)
+    // --- 🚀 초고속 로딩 로직 (Stale-while-revalidate) ---
     async function loadData() {
         const loader = document.getElementById('full-loader');
-        
-        // 1. 스마트폰에 저장된 이전 데이터가 있으면 즉시(0초) 화면에 렌더링
         const cachedData = localStorage.getItem('silverplay_cache');
+        
         if (cachedData) {
+            // 1. 재방문자: 스마트폰에 저장된 이전 데이터로 0초 만에 화면 구성
             const parsed = JSON.parse(cachedData);
             gVideos = parsed.videos;
             renderFilter(); renderHome(); renderRecs(parsed.recommendations);
-            loader.style.display = 'none'; // 로더 즉시 숨김
+            if(loader) loader.style.display = 'none'; 
+        } else {
+            // 2. 최초 방문자: 기본 내장 데이터(defaultVideos)로 즉시 화면 구성
+            gVideos = defaultVideos;
+            renderFilter(); renderHome();
+            if(loader) loader.style.display = 'none'; // 로더 빙글빙글 도는 것 즉시 숨김
+            showToast("최신 영상을 불러오고 있습니다...");
         }
 
-        // 2. 서버에서 최신 데이터를 가져옴 (보이지 않는 백그라운드 작업)
+        // 3. 백그라운드에서 구글 서버(GAS) 데이터 갱신 (4~5초 소요되어도 사용자는 이미 화면을 보고 있음)
         try {
-            // [최적화] action을 getAllData로 변경하여 1번의 요청으로 모든 데이터 수신
-            const res = await fetch(`${API_URL}?action=getAllData`);
-            const data = await res.json();
-            
-            // 스마트폰에 최신 데이터 저장
-            localStorage.setItem('silverplay_cache', JSON.stringify(data));
-            
-            // 데이터 업데이트
-            gVideos = data.videos;
-            renderFilter(); 
-            // 현재 보고 있는 탭/카테고리에 맞춰 리렌더링 (자연스럽게 UI 업데이트)
-            const activeChip = document.querySelector('.chip.active');
-            if(activeChip) filter(activeChip.innerText.trim() === '전체' ? 'all' : activeChip.innerText.trim());
-            renderRecs(data.recommendations);
+            if(API_URL && !API_URL.includes('URL')) {
+                const res = await fetch(`${API_URL}?action=getAllData`);
+                const data = await res.json();
+                
+                // 가져온 최신 데이터를 스마트폰 캐시에 저장
+                localStorage.setItem('silverplay_cache', JSON.stringify(data));
+                
+                // 데이터 업데이트
+                gVideos = data.videos;
+                
+                // 현재 보고 있는 카테고리 상태에 맞게 화면을 조용히 다시 그림
+                renderFilter(); 
+                const activeChip = document.querySelector('.chip.active');
+                if(activeChip) filter(activeChip.innerText.trim() === '전체' ? 'all' : activeChip.innerText.trim());
+                renderRecs(data.recommendations);
+            }
         } catch(e) { 
             console.error('Fetch Error:', e); 
-            if (!cachedData) showToast('인터넷 연결을 확인해주세요.'); 
-        } finally {
-            // 캐시가 없어서 로더가 돌고 있었다면 여기서 최종 숨김
-            loader.style.display = 'none';
         }
     }
 
@@ -352,7 +363,6 @@
         if(video) {
             if(!video.comments) video.comments = [];
             video.comments.push(txt);
-            // 로컬스토리지도 업데이트 해둠
             localStorage.setItem('silverplay_cache', JSON.stringify({videos: gVideos, recommendations: []}));
         }
 
@@ -367,6 +377,7 @@
     }
 
     function renderRecs(list) {
+        if(!list) return;
         document.getElementById('rec-list').innerHTML = list.map(r => 
             `<div class="rec-item">
                 <div style="font-weight:700; font-size:16px; margin-bottom:5px;">📺 ${r.channel}</div>
@@ -401,7 +412,7 @@
         fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addLike', id:id}) });
     }
 
-    // 공유 기능 (카카오 없이 네이티브 사용)
+    // 공유 기능
     function shareNative(title, vid) {
         const link = `https://youtu.be/${vid}`;
         if(navigator.share) navigator.share({title:'실버플레이 추천', text:`${title}\n좋은 영상 함께 봐요!`, url:link});
