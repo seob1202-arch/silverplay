@@ -14,268 +14,86 @@
     <link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet">
 
     <style>
-        /* --- 1. 기본 설정 (Simplicity First) --- */
+        /* 기본 스타일 유지 */
         :root {
-            --primary: #4A6C56;     /* 편안한 세이지 그린 */
-            --primary-dark: #3A5544;
-            --accent: #D4AF37;      /* 고급스러운 골드 포인트 */
-            --bg: #F5F7F6;          /* 눈이 편안한 미색 배경 */
-            --white: #FFFFFF;
-            --text-main: #111111;   /* 가독성 높은 진한 검정 */
-            --text-sub: #666666;
-            --border: #E5E5E5;
-            --shadow: 0 4px 20px rgba(0,0,0,0.06);
-            --radius: 16px;
+            --primary: #4A6C56; --primary-dark: #3A5544; --accent: #D4AF37; 
+            --bg: #F5F7F6; --white: #FFFFFF; --text-main: #111111; 
+            --text-sub: #666666; --border: #E5E5E5; --shadow: 0 4px 20px rgba(0,0,0,0.06); --radius: 16px;
         }
 
-        body {
-            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-            background: var(--bg);
-            margin: 0;
-            color: var(--text-main);
-            padding-bottom: 90px; /* 하단 탭바 공간 확보 */
-            -webkit-font-smoothing: antialiased;
-            word-break: keep-all;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 0 auto;
-            background: var(--bg);
-            min-height: 100vh;
-            position: relative;
-        }
-
+        body { font-family: 'Pretendard', sans-serif; background: var(--bg); margin: 0; color: var(--text-main); padding-bottom: 90px; -webkit-font-smoothing: antialiased; word-break: keep-all; }
+        .container { max-width: 500px; margin: 0 auto; background: var(--bg); min-height: 100vh; position: relative; }
         button { cursor: pointer; border: none; font-family: inherit; background: none; }
         
-        /* --- 2. 헤더 (Clean UI) --- */
-        header {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
+        /* 헤더 */
+        header { position: sticky; top: 0; z-index: 100; background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; }
         .brand { display: flex; align-items: center; gap: 8px; }
         .brand h1 { margin: 0; font-size: 22px; color: var(--primary); font-weight: 800; letter-spacing: -0.5px; }
         .brand i { color: var(--primary); font-size: 20px; }
-
         .header-controls { display: flex; gap: 10px; }
-        .btn-control {
-            width: 36px; height: 36px; border-radius: 50%;
-            background: #F0F2F1; color: var(--text-sub);
-            font-size: 14px; font-weight: bold;
-            display: flex; align-items: center; justify-content: center;
-            transition: 0.2s;
-        }
-        .btn-control:active { transform: scale(0.9); background: #E0E2E1; }
-
-        /* --- 3. 메인 콘텐츠 --- */
+        .btn-control { width: 36px; height: 36px; border-radius: 50%; background: #F0F2F1; color: var(--text-sub); font-size: 14px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         
-        /* 필터 칩 */
-        .filter-scroll {
-            padding: 15px 20px;
-            overflow-x: auto;
-            white-space: nowrap;
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            background: var(--bg);
-        }
+        /* 필터 */
+        .filter-scroll { padding: 15px 20px; overflow-x: auto; white-space: nowrap; -ms-overflow-style: none; scrollbar-width: none; background: var(--bg); }
         .filter-scroll::-webkit-scrollbar { display: none; }
-        .chip {
-            display: inline-block;
-            padding: 10px 18px;
-            margin-right: 8px;
-            border-radius: 25px;
-            background: var(--white);
-            color: var(--text-sub);
-            font-size: 15px;
-            font-weight: 600;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-        .chip.active {
-            background: var(--primary);
-            color: var(--white);
-            border-color: var(--primary);
-            box-shadow: 0 4px 10px rgba(74, 108, 86, 0.3);
-        }
+        .chip { display: inline-block; padding: 10px 18px; margin-right: 8px; border-radius: 25px; background: var(--white); color: var(--text-sub); font-size: 15px; font-weight: 600; border: 1px solid var(--border); transition: all 0.2s; }
+        .chip.active { background: var(--primary); color: var(--white); border-color: var(--primary); box-shadow: 0 4px 10px rgba(74, 108, 86, 0.3); }
 
-        /* 섹션 타이틀 */
-        .section-header {
-            padding: 25px 20px 15px;
-            display: flex;
-            align-items: flex-end;
-            gap: 8px;
-        }
+        /* 카드/섹션 */
+        .section-header { padding: 25px 20px 15px; display: flex; align-items: flex-end; gap: 8px; }
         .section-title { font-size: 20px; font-weight: 800; margin: 0; line-height: 1; }
         .section-sub { font-size: 14px; color: var(--text-sub); font-weight: 500; }
 
-        /* 카드 디자인 (Modern & Soft) */
         .card-list { padding: 0 20px; display: flex; flex-direction: column; gap: 20px; }
-        .card {
-            background: var(--white);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-            transition: transform 0.2s;
-        }
+        .card { background: var(--white); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
         .card.best { border: 2px solid var(--accent); position: relative; }
-        .card.best::after {
-            content: 'BEST'; position: absolute; top: 0; right: 0;
-            background: var(--accent); color: white;
-            font-size: 11px; font-weight: bold; padding: 4px 10px;
-            border-bottom-left-radius: 10px;
-        }
-
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 비율 */
-            background: black;
-        }
+        .card.best::after { content: 'BEST'; position: absolute; top: 0; right: 0; background: var(--accent); color: white; font-size: 11px; font-weight: bold; padding: 4px 10px; border-bottom-left-radius: 10px; }
+        .video-wrapper { position: relative; width: 100%; padding-bottom: 56.25%; background: black; }
         .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
-
         .card-body { padding: 20px; }
         .card-meta { display: flex; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
         .badge { font-size: 12px; padding: 4px 8px; border-radius: 6px; font-weight: 600; background: #F0F2F1; color: var(--text-sub); }
         .badge.cat { background: rgba(74, 108, 86, 0.1); color: var(--primary); }
-        
         .card-title { font-size: 19px; font-weight: 700; margin: 0 0 15px 0; line-height: 1.4; }
-
-        .card-actions {
-            display: flex; gap: 10px; border-top: 1px solid #F5F5F5; padding-top: 15px;
-        }
-        .btn-action {
-            flex: 1;
-            padding: 12px 0;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 600;
-            display: flex; align-items: center; justify-content: center; gap: 6px;
-            color: var(--text-sub);
-            background: #F8F9FA;
-            transition: 0.2s;
-        }
+        .card-actions { display: flex; gap: 10px; border-top: 1px solid #F5F5F5; padding-top: 15px; }
+        .btn-action { flex: 1; padding: 12px 0; border-radius: 10px; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 6px; color: var(--text-sub); background: #F8F9FA; }
         .btn-action.primary { color: var(--primary); background: rgba(74, 108, 86, 0.08); }
-        .btn-action:active { transform: scale(0.96); }
 
-        /* --- 4. 추천 게시판 폼 --- */
+        /* 기타 UI (게시판/네비게이션/팝업) 생략 없이 적용 */
         .rec-container { padding: 20px; }
-        .form-box {
-            background: var(--white);
-            padding: 25px 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 25px;
-        }
+        .form-box { background: var(--white); padding: 25px 20px; border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 25px; }
         .form-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .form-label { font-size: 18px; font-weight: 700; }
-        
-        .input-field {
-            width: 100%;
-            padding: 14px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            font-size: 16px;
-            background: #FAFAFA;
-            box-sizing: border-box;
-            outline: none;
-        }
-        .input-field:focus { border-color: var(--primary); background: white; }
-        
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: var(--primary);
-            color: white;
-            font-size: 16px;
-            font-weight: 700;
-            border-radius: 12px;
-            margin-top: 5px;
-        }
-
-        .rec-item {
-            background: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            border: 1px solid var(--border);
-        }
-
-        /* --- 5. 하단 내비게이션 (핵심 UX 변경) --- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            background: var(--white);
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0 25px; /* 아이폰 하단 바 고려 */
-            z-index: 1000;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.03);
-            max-width: 500px; /* 컨테이너 너비 제한 시 필요, 중앙정렬 */
-            left: 50%; transform: translateX(-50%);
-        }
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 5px;
-            color: #999;
-            text-decoration: none;
-            width: 80px;
-            cursor: pointer;
-        }
+        .input-field { width: 100%; padding: 14px; margin-bottom: 10px; border: 1px solid var(--border); border-radius: 12px; font-size: 16px; background: #FAFAFA; box-sizing: border-box; outline: none; }
+        .btn-submit { width: 100%; padding: 16px; background: var(--primary); color: white; font-size: 16px; font-weight: 700; border-radius: 12px; margin-top: 5px; }
+        .rec-item { background: var(--white); padding: 20px; border-radius: var(--radius); margin-bottom: 15px; border: 1px solid var(--border); }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--white); border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0 25px; z-index: 1000; box-shadow: 0 -5px 20px rgba(0,0,0,0.03); max-width: 500px; left: 50%; transform: translateX(-50%); }
+        .nav-item { display: flex; flex-direction: column; align-items: center; gap: 5px; color: #999; text-decoration: none; width: 80px; cursor: pointer; }
         .nav-item i { font-size: 22px; transition: 0.2s; }
         .nav-item span { font-size: 11px; font-weight: 600; }
-        
         .nav-item.active { color: var(--primary); }
         .nav-item.active i { transform: translateY(-2px); }
 
-        /* --- 6. 모달 & 토스트 --- */
-        .modal-bg {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6); z-index: 2000;
-            align-items: center; justify-content: center;
-            backdrop-filter: blur(3px);
-        }
-        .modal-box {
-            background: white; width: 85%; max-width: 380px;
-            border-radius: 24px; padding: 25px;
-            max-height: 80vh; overflow-y: auto;
-            display: flex; flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
+        .modal-bg { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-box { background: white; width: 85%; max-width: 380px; border-radius: 24px; padding: 25px; max-height: 80vh; overflow-y: auto; display: flex; flex-direction: column; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         .modal-header { font-size: 20px; font-weight: 800; color: var(--text-main); margin-bottom: 20px; text-align: center; }
         
-        .toast {
-            position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px);
-            background: rgba(30, 30, 30, 0.9); color: white;
-            padding: 14px 24px; border-radius: 50px;
-            font-size: 15px; font-weight: 600;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            opacity: 0; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-            z-index: 9999; pointer-events: none; width: max-content;
-        }
+        .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(30, 30, 30, 0.9); color: white; padding: 14px 24px; border-radius: 50px; font-size: 15px; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.2); opacity: 0; transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28); z-index: 9999; pointer-events: none; width: max-content; }
         .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .install-popup { position: fixed; bottom: 90px; left: 20px; right: 20px; background: #222; color: white; padding: 20px; border-radius: 16px; display: none; align-items: center; justify-content: space-between; z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.3); max-width: 460px; margin: 0 auto; }
 
-        /* PWA 설치 팝업 스타일 */
-        .install-popup {
-            position: fixed; bottom: 90px; left: 20px; right: 20px;
-            background: #222; color: white;
-            padding: 20px; border-radius: 16px;
-            display: none; align-items: center; justify-content: space-between;
-            z-index: 5000; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 460px; margin: 0 auto;
+        /* [추가됨] 로딩 인디케이터 스피너 */
+        .loader-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg); z-index: 99;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid var(--border);
+            border-top-color: var(--primary); border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 15px;
+        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -287,18 +105,22 @@
             <h1>실버플레이</h1>
         </div>
         <div class="header-controls">
-            <button class="btn-control" onclick="resizeFont(-1)" aria-label="글자 작게"><i class="fas fa-minus"></i></button>
-            <button class="btn-control" onclick="resizeFont(1)" aria-label="글자 크게"><i class="fas fa-plus"></i></button>
-            <button class="btn-control" onclick="openModal('intro')" aria-label="도움말"><i class="fas fa-question"></i></button>
+            <button class="btn-control" onclick="resizeFont(-1)"><i class="fas fa-minus"></i></button>
+            <button class="btn-control" onclick="resizeFont(1)"><i class="fas fa-plus"></i></button>
+            <button class="btn-control" onclick="openModal('intro')"><i class="fas fa-question"></i></button>
         </div>
     </header>
+
+    <div id="full-loader" class="loader-overlay">
+        <div class="spinner"></div>
+        <div style="color:var(--text-sub); font-weight:600;">영상을 불러오고 있습니다...</div>
+    </div>
 
     <div id="view-home">
         <div class="filter-scroll" id="filters">
             <button class="chip active">전체</button>
         </div>
         <div id="video-list" class="card-list" style="padding-top: 10px;"></div>
-        
         <div style="padding: 40px 20px; text-align: center; color: #999; font-size: 13px;">
             <p style="margin-bottom: 10px;">
                 <span onclick="openModal('terms')" style="cursor:pointer; text-decoration:underline; margin-right:10px;">이용약관</span>
@@ -310,14 +132,11 @@
 
     <div id="view-rec" style="display:none;">
         <div class="section-header">
-            <h2 class="section-title">추천 게시판</h2>
-            <span class="section-sub">이웃들과 함께해요</span>
+            <h2 class="section-title">추천 게시판</h2><span class="section-sub">이웃들과 함께해요</span>
         </div>
         <div class="rec-container">
             <div class="form-box">
-                <div class="form-header">
-                    <span class="form-label">📢 영상 추천하기</span>
-                </div>
+                <div class="form-header"><span class="form-label">📢 영상 추천하기</span></div>
                 <input type="text" id="recWriter" class="input-field" placeholder="작성자 이름">
                 <input type="text" id="recChannel" class="input-field" placeholder="추천 채널 또는 제목">
                 <input type="text" id="recReason" class="input-field" placeholder="추천 이유 (간단히)" style="margin-bottom:5px;">
@@ -330,12 +149,10 @@
 
     <nav class="bottom-nav">
         <div class="nav-item active" onclick="switchTab('home')" id="nav-home">
-            <i class="fas fa-home"></i>
-            <span>오늘의 영상</span>
+            <i class="fas fa-home"></i><span>오늘의 영상</span>
         </div>
         <div class="nav-item" onclick="switchTab('rec')" id="nav-rec">
-            <i class="fas fa-comment-medical"></i>
-            <span>추천 게시판</span>
+            <i class="fas fa-comment-medical"></i><span>추천 게시판</span>
         </div>
     </nav>
 </div>
@@ -362,9 +179,9 @@
 <div id="toast-container"></div>
 
 <script>
-    // ▼▼▼ [GAS 배포 URL 입력 필수] ▼▼▼
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxuLVNH5StrgFxJ-g-JFQ32u9y67J9z11i_ZbVf0JgWGHtE3YAD3M2wDh9eNMyrgcL4bg/exec'; 
-    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲
+    // ▼▼▼ 반드시 새로 배포한 GAS URL을 넣어주세요 ▼▼▼
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw1ZzdOp0EGLkswZJKUFrUKZGKOkCi6l_XcLzMkLla2cXB9qx-RoxkyOaj4UHQ7xOpi7w/exec'; 
+    // ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲
 
     let gVideos = [];
     let pwaPrompt;
@@ -386,7 +203,6 @@
         }
     }
 
-    // 유튜브 ID 정제
     function extractVideoId(url) {
         if(!url) return '';
         url = url.trim();
@@ -396,24 +212,42 @@
         return (match && match[2].length === 11) ? match[2] : null;
     }
 
+    // [핵심 변경] 로컬 스토리지 캐싱 + 단일 API 호출 (Stale-while-revalidate 패턴)
     async function loadData() {
-        // Mock Data for testing
-        if(!API_URL || API_URL.includes('URL') || API_URL.includes('여기에')) {
-            gVideos = [
-                {id:1, title:"임영웅 노래모음 - 사랑은 늘 도망가 외 30곡", videoId:"dQw4w9WgXcQ", category:"트로트", duration:"60분", channelName:"임영웅TV", likes:1240, comments:["정말 좋습니다!", "부모님이 좋아하세요."]},
-                {id:2, title:"하루 10분! 무릎 통증 싹 사라지는 기적의 운동", videoId:"xyz", category:"건강", duration:"10분", channelName:"건강박사", likes:512, comments:[]},
-                {id:3, title:"스마트폰 글자 크기 조절하는 법 (어르신 필수)", videoId:"abc", category:"디지털", duration:"5분", channelName:"친절한금자씨", likes:89, comments:[]}
-            ];
-            renderFilter(); renderHome(); return;
+        const loader = document.getElementById('full-loader');
+        
+        // 1. 스마트폰에 저장된 이전 데이터가 있으면 즉시(0초) 화면에 렌더링
+        const cachedData = localStorage.getItem('silverplay_cache');
+        if (cachedData) {
+            const parsed = JSON.parse(cachedData);
+            gVideos = parsed.videos;
+            renderFilter(); renderHome(); renderRecs(parsed.recommendations);
+            loader.style.display = 'none'; // 로더 즉시 숨김
         }
+
+        // 2. 서버에서 최신 데이터를 가져옴 (보이지 않는 백그라운드 작업)
         try {
-            const [v, r] = await Promise.all([
-                fetch(`${API_URL}?action=getVideos`).then(res=>res.json()),
-                fetch(`${API_URL}?action=getRecommendations`).then(res=>res.json())
-            ]);
-            gVideos = v.map(item => ({...item, comments: item.comments || []}));
-            renderFilter(); renderHome(); renderRecs(r);
-        } catch(e) { console.error(e); showToast('데이터 로드 실패'); }
+            // [최적화] action을 getAllData로 변경하여 1번의 요청으로 모든 데이터 수신
+            const res = await fetch(`${API_URL}?action=getAllData`);
+            const data = await res.json();
+            
+            // 스마트폰에 최신 데이터 저장
+            localStorage.setItem('silverplay_cache', JSON.stringify(data));
+            
+            // 데이터 업데이트
+            gVideos = data.videos;
+            renderFilter(); 
+            // 현재 보고 있는 탭/카테고리에 맞춰 리렌더링 (자연스럽게 UI 업데이트)
+            const activeChip = document.querySelector('.chip.active');
+            if(activeChip) filter(activeChip.innerText.trim() === '전체' ? 'all' : activeChip.innerText.trim());
+            renderRecs(data.recommendations);
+        } catch(e) { 
+            console.error('Fetch Error:', e); 
+            if (!cachedData) showToast('인터넷 연결을 확인해주세요.'); 
+        } finally {
+            // 캐시가 없어서 로더가 돌고 있었다면 여기서 최종 숨김
+            loader.style.display = 'none';
+        }
     }
 
     function renderFilter() {
@@ -450,7 +284,7 @@
 
     function mkCard(v, isBest) {
         const cleanId = extractVideoId(v.videoId);
-        if(!cleanId) return document.createElement('div'); // Error skip
+        if(!cleanId) return document.createElement('div');
 
         const el = document.createElement('div');
         el.className = `card ${isBest?'best':''}`;
@@ -472,7 +306,7 @@
                     <button class="btn-action primary" onclick="openReviewModal('${v.id}')">
                         <i class="far fa-comment-dots"></i> 리뷰(${v.comments ? v.comments.length : 0})
                     </button>
-                    <button class="btn-action" onclick="shareNative('${v.title}')">
+                    <button class="btn-action" onclick="shareNative('${v.title}', '${cleanId}')">
                         <i class="fas fa-share-alt"></i> 공유
                     </button>
                 </div>
@@ -481,7 +315,6 @@
         return el;
     }
 
-    // --- 리뷰 모달 (New Design) ---
     function openReviewModal(id) {
         const video = gVideos.find(v => String(v.id) === String(id));
         if(!video) return;
@@ -514,25 +347,25 @@
         const txt = inputEl.value.trim();
         if(!txt) return showToast('내용을 입력해주세요.');
 
+        // 즉각 UI 반영 (Optimistic UI)
         const video = gVideos.find(v => String(v.id) === String(id));
         if(video) {
             if(!video.comments) video.comments = [];
             video.comments.push(txt);
+            // 로컬스토리지도 업데이트 해둠
+            localStorage.setItem('silverplay_cache', JSON.stringify({videos: gVideos, recommendations: []}));
         }
 
-        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) {
-            fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addComment', videoId:id, nickname:'익명', content:txt}) });
-        }
+        // 백엔드 비동기 요청
+        fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addComment', videoId:id, nickname:'익명', content:txt}) });
 
         showToast('📝 리뷰가 등록되었습니다.');
         openReviewModal(id); 
-        // 칩 상태 확인 후 리스트 갱신
         const activeChip = document.querySelector('.chip.active');
         const cat = activeChip ? activeChip.innerText.trim() : '전체';
         filter(cat === '전체' ? 'all' : cat);
     }
 
-    // --- 추천 게시판 ---
     function renderRecs(list) {
         document.getElementById('rec-list').innerHTML = list.map(r => 
             `<div class="rec-item">
@@ -546,40 +379,39 @@
     function submitRec() {
         const w=document.getElementById('recWriter').value, c=document.getElementById('recChannel').value, r=document.getElementById('recReason').value;
         if(!w || !c) return showToast('이름과 채널명은 필수입니다.');
-        showToast('📢 추천해주셔서 감사합니다!');
+        
         document.getElementById('recWriter').value='';
         document.getElementById('recChannel').value='';
         document.getElementById('recReason').value='';
         
-        // 로컬 리스트에 가짜 추가 (즉각 반응용)
-        const newItem = {writer:w, channel:c, reason:r};
+        // 즉각 화면 반영
         const listDiv = document.getElementById('rec-list');
         listDiv.insertAdjacentHTML('afterbegin', 
             `<div class="rec-item"><div style="font-weight:700; font-size:16px; margin-bottom:5px;">📺 ${c}</div><div style="color:#555; font-size:15px; margin-bottom:8px;">${r}</div><div style="font-size:13px; color:#999; text-align:right;">- ${w}님 추천</div></div>`
         );
-
-        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addRecommendation', writer:w, channel:c, reason:r}) });
+        
+        fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addRecommendation', writer:w, channel:c, reason:r}) });
+        showToast('📢 추천해주셔서 감사합니다!');
     }
 
-    // --- 공통 기능 ---
     function handleLike(id) {
         const el = document.getElementById(`like-${id}`);
         el.innerText = parseInt(el.innerText) + 1;
         showToast('❤️ 좋아요!');
-        if(API_URL && !API_URL.includes('URL') && !API_URL.includes('여기에')) fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addLike', id:id}) });
+        fetch(API_URL, { method:'POST', body:JSON.stringify({action:'addLike', id:id}) });
     }
 
-    function shareNative(title) {
-        if(navigator.share) navigator.share({title:'실버플레이', text:title, url:location.href});
-        else { navigator.clipboard.writeText(location.href); showToast("📋 주소가 복사되었습니다."); }
+    // 공유 기능 (카카오 없이 네이티브 사용)
+    function shareNative(title, vid) {
+        const link = `https://youtu.be/${vid}`;
+        if(navigator.share) navigator.share({title:'실버플레이 추천', text:`${title}\n좋은 영상 함께 봐요!`, url:link});
+        else { navigator.clipboard.writeText(link); showToast("📋 영상 주소가 복사되었습니다."); }
     }
 
     function switchTab(t) {
         document.getElementById('view-home').style.display = t==='home'?'block':'none';
         document.getElementById('view-rec').style.display = t==='rec'?'block':'none';
         window.scrollTo(0,0);
-        
-        // 하단 탭 활성화 스타일
         document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
         document.getElementById(`nav-${t}`).classList.add('active');
     }
