@@ -157,15 +157,33 @@
     </nav>
 </div>
 
+<!-- Android/Chrome 설치 팝업 -->
 <div class="install-popup" id="install-popup">
-    <div>
-        <div style="font-weight:bold; font-size:15px; margin-bottom:4px;">앱으로 더 편하게 보세요!</div>
-        <div style="font-size:13px; color:#ccc;">홈 화면에 추가하기</div>
+    <div style="display:flex; align-items:center; gap:12px; flex:1;">
+        <img src="icon-192.png" style="width:44px; height:44px; border-radius:10px; flex-shrink:0;">
+        <div>
+            <div style="font-weight:bold; font-size:15px; margin-bottom:3px;">앱으로 더 편하게!</div>
+            <div style="font-size:13px; color:#ccc;">홈 화면에 추가하면 앱처럼 사용 가능해요</div>
+        </div>
     </div>
-    <div style="display:flex; gap:10px;">
-        <button style="color:#aaa; font-weight:bold; font-size:14px;" onclick="document.getElementById('install-popup').style.display='none'">닫기</button>
+    <div style="display:flex; gap:10px; flex-shrink:0; margin-left:10px;">
+        <button style="color:#aaa; font-weight:bold; font-size:14px;" onclick="dismissInstall()">나중에</button>
         <button style="background:var(--primary); color:white; padding:8px 16px; border-radius:20px; font-weight:bold; font-size:14px;" onclick="triggerInstall()">설치</button>
     </div>
+</div>
+
+<!-- iOS Safari 설치 안내 팝업 -->
+<div id="ios-popup" style="display:none; position:fixed; bottom:90px; left:20px; right:20px; background:#1c1c1e; color:white; padding:20px; border-radius:16px; z-index:5000; box-shadow:0 10px 30px rgba(0,0,0,0.4); max-width:460px; margin:0 auto; left:50%; transform:translateX(-50%); width:calc(100% - 40px);">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+        <div style="font-weight:bold; font-size:16px;">📲 앱으로 설치하기</div>
+        <button onclick="document.getElementById('ios-popup').style.display='none'" style="color:#aaa; font-size:20px; line-height:1;">✕</button>
+    </div>
+    <div style="font-size:14px; color:#ddd; line-height:1.8;">
+        아래 버튼을 눌러 홈 화면에 추가하면<br>앱처럼 편리하게 이용할 수 있어요!<br><br>
+        ① 하단 <strong style="color:white;">공유 버튼 ⎙</strong> 을 누르세요<br>
+        ② <strong style="color:white;">'홈 화면에 추가'</strong> 를 선택하세요
+    </div>
+    <div style="position:absolute; bottom:-10px; left:50%; transform:translateX(-50%); width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-top:10px solid #1c1c1e;"></div>
 </div>
 
 <div class="modal-bg" id="modal">
@@ -193,11 +211,49 @@
         {id:"default3", title:"스마트폰 글자 크기 조절하는 법 (어르신 필수)", videoId:"abc", category:"디지털", duration:"5분", channelName:"친절한금자씨", likes:89, comments:[]}
     ];
 
-    document.addEventListener('DOMContentLoaded', loadData);
-    if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');
+    document.addEventListener('DOMContentLoaded', () => {
+        loadData();
+        initPWA();
+    });
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js').catch(e => console.warn('SW 등록 실패:', e));
+    }
+
+    function initPWA() {
+        // 이미 설치된 경우(standalone 모드)면 팝업 표시 안 함
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
+                          || window.navigator.standalone === true;
+        if (isStandalone) return;
+
+        // 닫기 누른 적 있으면 하루 동안 안 보이게
+        const dismissed = localStorage.getItem('pwa_dismissed');
+        if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return;
+
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+        if (isIOS && isSafari) {
+            // iOS Safari: 수동 안내 팝업 표시
+            setTimeout(() => {
+                document.getElementById('ios-popup').style.display = 'block';
+            }, 3000);
+        }
+        // Android/Chrome: beforeinstallprompt 이벤트 대기
+    }
+
     window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault(); pwaPrompt = e;
+        e.preventDefault();
+        pwaPrompt = e;
+        const dismissed = localStorage.getItem('pwa_dismissed');
+        if (dismissed && Date.now() - parseInt(dismissed) < 86400000) return;
         setTimeout(() => document.getElementById('install-popup').style.display = 'flex', 3000);
+    });
+
+    // 설치 완료되면 팝업 숨김
+    window.addEventListener('appinstalled', () => {
+        document.getElementById('install-popup').style.display = 'none';
+        document.getElementById('ios-popup').style.display = 'none';
+        showToast('🎉 앱이 설치되었습니다!');
     });
 
     function triggerInstall() {
@@ -208,6 +264,11 @@
                 pwaPrompt=null;
             });
         }
+    }
+
+    function dismissInstall() {
+        document.getElementById('install-popup').style.display = 'none';
+        localStorage.setItem('pwa_dismissed', Date.now().toString());
     }
 
     function extractVideoId(url) {
